@@ -3,6 +3,7 @@ package io.oneinfinity.eventmanagement;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -45,6 +46,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Id to identity READ_CONTACTS permission request.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
+    Intent mainIntent = null;
+    LoginActivity self = null;
 
     /**
      * A dummy authentication store containing known user names and passwords.
@@ -68,6 +71,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        self = this;
+        mainIntent = new Intent(this, MainActivity.class);
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
@@ -325,7 +330,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             LoginService login = new LoginService(mEmail, mPassword);
             String token = login.execute();
-
             Log.w("Login act", token);
 
             if(token.length() == 0) {
@@ -343,7 +347,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             if (success) {
                 Log.w("Login Activity", String.valueOf(success));
-                //finish();
+                finish();
+                self.startActivity(mainIntent);
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();

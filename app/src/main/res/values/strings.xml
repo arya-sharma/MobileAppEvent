@@ -1,7 +1,11 @@
 <resources>
-    <string name="app_name">Event Management</string>
+    <string name="app_name">Infinity Payments</string>
+    <string name="main_name">Main</string>
     
     <!-- Strings related to login -->
+    <string name="go_to_item">Go to all items</string>
+    <string name="test">Menu</string>
+    <string name="top_up">Top Up Qr Code</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in </string>
