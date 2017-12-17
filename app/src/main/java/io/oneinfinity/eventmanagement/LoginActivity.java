@@ -30,6 +30,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import java.util.ArrayList;
+import android.widget.CheckBox;
 import java.util.List;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -289,6 +290,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailView.setAdapter(adapter);
     }
 
+
+    public void onShowPassword(View view) {
+        // Is the view now checked?
+        boolean checked = ((CheckBox) view).isChecked();
+
+        // Check which checkbox was clicked
+        switch(view.getId()) {
+            case R.id.checkbox_password:
+                if (checked)
+                    mPasswordView.setTransformationMethod(null);
+                // Put some meat on the sandwich
+                break;
+        }
+    }
+
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
@@ -305,14 +321,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
 
             LoginService login = new LoginService(mEmail, mPassword);
             String token = login.execute();
 
             Log.w("Login act", token);
 
-            // TODO: register the new account here.
             if(token.length() == 0) {
                 return false;
             }
