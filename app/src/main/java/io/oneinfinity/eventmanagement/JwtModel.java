@@ -6,10 +6,10 @@ package io.oneinfinity.eventmanagement;
 
 public class JwtModel {
 
-    public final String jwtToken;
+    public static String jwtToken;
 
     JwtModel(String token) {
-        this.jwtToken = token;
+        JwtModel.jwtToken = token;
     }
 
 }
