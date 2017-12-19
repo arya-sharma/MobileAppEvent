@@ -44,6 +44,7 @@ public class AllItemsFragment extends Fragment  implements View.OnClickListener 
     private ArrayList<ItemModel> items;
     private View rootView;
     private ItemActivity activity;
+    private GridView gridView;
 
     private OnFragmentInteractionListener mListener;
 
@@ -86,7 +87,7 @@ public class AllItemsFragment extends Fragment  implements View.OnClickListener 
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_all_items, container, false);
-        GridView gridView = (GridView) rootView.findViewById(R.id.gridview);
+        gridView = (GridView) rootView.findViewById(R.id.gridview);
         gridView.setAdapter(new MyAdapter(getActivity().getApplicationContext()));
         return rootView;
     }
@@ -131,7 +132,6 @@ public class AllItemsFragment extends Fragment  implements View.OnClickListener 
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 
@@ -188,18 +188,17 @@ public class AllItemsFragment extends Fragment  implements View.OnClickListener 
 
             //set click listener
             add.setOnClickListener(
-                    new Button.OnClickListener() {
-                        public void onClick(View v) {
-                            Log.w("Button clicked", v.getTag().toString());
-                            AllItemsFragment.this.addCheckout(Integer.parseInt(v.getTag().toString()));
-                        }
+                new Button.OnClickListener() {
+                    public void onClick(View v) {
+                        AllItemsFragment.this.addCheckout(Integer.parseInt(v.getTag().toString()));
                     }
+                }
             );
 
             ItemModel item = (ItemModel) getItem(i);
 
             //picture.setBackgroundColor();
-            name.setText(item.getItemName());
+            name.setText(item.getItemName() + " - " + item.getItemPrice());
             add.setText("Add +");
 
 
@@ -211,9 +210,18 @@ public class AllItemsFragment extends Fragment  implements View.OnClickListener 
     public void addCheckout (int itemIndex) {
 
         ItemModel item = items.get(itemIndex);
-        activity.addCheckoutUI(item);
+        activity.addCheckoutUI(item, itemIndex);
+        //removeItems();
 
+    }
 
+    //change the padding as items removed and added
+    public void removeItems() {
+        int paddingDp = 50;
+        float density = this.getResources().getDisplayMetrics().density;
+        int paddingPx = (int)(paddingDp * density);
+        int paddingOrg = gridView.getPaddingBottom();
+        gridView.setPadding(0, 0,0, paddingOrg + paddingPx);
     }
 
 }

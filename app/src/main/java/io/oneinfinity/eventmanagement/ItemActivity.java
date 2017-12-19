@@ -34,6 +34,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 
 /**
  * Created by ujjwal on 12/17/2017.
@@ -51,7 +52,7 @@ public class ItemActivity extends AppCompatActivity  {
     private ItemDataTask mItemTask = null;
     private ItemModel[] items;
     private ItemActivity self = null;
-    private HashMap<String, View> lineItems = new HashMap<>();
+    private TreeMap<String, LineItems> lineItems = new TreeMap<>();
     private int count = 0;
     LinearLayout layout;
 
@@ -235,41 +236,133 @@ public class ItemActivity extends AppCompatActivity  {
 
     }
 
-    public void addCheckoutUI(ItemModel item) {
-        View C = getLayoutInflater().inflate(R.layout.line_item, layout, false);
-        lineItems.put(String.valueOf(count), C);
-        TextView textview = (TextView)C.findViewById(R.id.item_Text);
-        textview.setText("1 " + item.getItemName() + " added");
-        Button checkout = (Button)C.findViewById(R.id.item_checkout);
-        Button remove = (Button)C.findViewById(R.id.item_remove);
-        LinearLayout layoutc = (LinearLayout)C.findViewById(R.id.item_checkout_lay);
-        //set click listener
-        remove.setTag(count);
-        remove.setOnClickListener(
-                new Button.OnClickListener() {
-                    public void onClick(View v) {
-                        Log.w("Button clicked", v.getTag().toString());
-                        View lineItem = lineItems.remove(v.getTag().toString());
-                        layout.removeView(lineItem);
-                        layout.setMinimumHeight(layout.getHeight()-160);
-                        count --;
-                        if(Integer.parseInt(v.getTag().toString()) == 0 && lineItems.size() > -1){
-                            View vl = (View) lineItems.values().toArray()[0];
-                            Button checkout = (Button)vl.findViewById(R.id.item_checkout);
-                            checkout.setVisibility(View.VISIBLE);
+    public void addCheckoutUI(ItemModel item, int index) {
+        View C;
+        LineItems line;
+        TextView textview;
+
+        if(lineItems.get(item.getItemId()) != null) {
+            line = lineItems.get(item.getItemId());
+            line.setItemCount(line.getItemCount() + 1);
+            //increment UI
+            C = line.getView();
+            textview = (TextView)C.findViewById(R.id.item_Text);
+            textview.setText(line.getItemCount() + " " + item.getItemName() + " added");
+        }
+        else {
+            C = getLayoutInflater().inflate(R.layout.line_item, layout, false);
+            line = new LineItems(item.getItemId(), C, item.getItemName());
+            lineItems.put(item.getItemId(), line);
+            line.setItemCount(1);
+            textview = (TextView)C.findViewById(R.id.item_Text);
+            textview.setText("1 " + item.getItemName() + " added");
+            layout.addView(C);
+
+            layout.setMinimumHeight(count*160);
+            Button checkout = (Button)C.findViewById(R.id.item_checkout);
+            Button remove = (Button)C.findViewById(R.id.item_remove);
+            if(count == 0) {
+                LinearLayout layoutC = (LinearLayout)C.findViewById(R.id.item_checkout_lay);
+                layoutC.setVisibility(View.VISIBLE);
+                checkout.setVisibility(View.VISIBLE);
+            }
+
+            //set remove click listener
+            remove.setTag(item.getItemId());
+            remove.setOnClickListener(
+                    new Button.OnClickListener() {
+                        public void onClick(View v) {
+                            Log.w("Button clicked 251", v.getTag().toString());
+                            //View lineItem = lineItems.remove(v.getTag().toString());
+                            LineItems line = lineItems.get(v.getTag());
+                            line.setItemCount(line.getItemCount() -1);
+
+                            if(line.getItemCount() == 0) {
+                                layout.removeView(line.getView());
+                                lineItems.remove(line.getItemId());
+                                Log.w("Count of lines", String.valueOf(count));
+                                count --;
+                                Log.w("LineItmes", String.valueOf(lineItems.size()));
+                                if(count > 0) {
+
+                                    LineItems lineFirst = lineItems.firstEntry().getValue();
+                                    View vl = lineFirst.getView();
+                                    Button checkout = (Button) vl.findViewById(R.id.item_checkout);
+                                    checkout.setVisibility(View.VISIBLE);
+                                }
+
+                                layout.setMinimumHeight(layout.getHeight() - 160);
+                            }
+                            else {
+                                TextView textview = (TextView)line.getView().findViewById(R.id.item_Text);
+                                textview.setText(line.getItemCount() +" " + line.getItemName() + " added");
+                            }
+
+//                            Log.w("Counter", String.valueOf(count));
+//
+//                            if(Integer.parseInt(v.getTag().toString()) == 0 && count > -1){
+//                                View vl = (View) lineItems.values().toArray()[0];
+//                                Button checkout = (Button)vl.findViewById(R.id.item_checkout);
+//                                checkout.setVisibility(View.VISIBLE);
+//                            }
                         }
                     }
-                }
-        );
-        if(count == 0) {
-            Log.w("Counting",  String.valueOf(count));
-            layoutc.setVisibility(View.VISIBLE);
-            checkout.setVisibility(View.VISIBLE);
+            );
+            count++;
         }
-        layout.addView(C);
 
-        layout.setMinimumHeight(count*160);
-        count++;
+
+
+        Log.w("Counting",  String.valueOf(count));
+
+
         layout.setVisibility(View.VISIBLE);
+    }
+
+    private class LineItems {
+
+        private String itemId;
+        private View view;
+        private int itemCount;
+        private String itemName;
+
+        LineItems(String itemId, View view, String itemName) {
+            this.itemId = itemId;
+            this.view = view;
+            this.itemName = itemName;
+        }
+
+        public String getItemName() {
+            return itemName;
+        }
+
+        public void setItemName(String itemName) {
+            this.itemName = itemName;
+        }
+
+        public int getItemCount() {
+            return itemCount;
+        }
+
+        public void setItemCount(int itemCount) {
+            this.itemCount = itemCount;
+        }
+
+        public String getItemId() {
+            return itemId;
+        }
+
+        public void setItemId(String itemId) {
+            this.itemId = itemId;
+        }
+
+        public View getView() {
+            return view;
+        }
+
+        public void setView(View view) {
+            this.view = view;
+        }
+
     }
 }
