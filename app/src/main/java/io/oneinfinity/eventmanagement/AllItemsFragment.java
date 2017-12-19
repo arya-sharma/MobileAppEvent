@@ -1,12 +1,27 @@
 package io.oneinfinity.eventmanagement;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.GridLayout;
+import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -17,7 +32,7 @@ import android.view.ViewGroup;
  * Use the {@link AllItemsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AllItemsFragment extends Fragment {
+public class AllItemsFragment extends Fragment  implements View.OnClickListener  {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -26,6 +41,9 @@ public class AllItemsFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private ArrayList<ItemModel> items;
+    private View rootView;
+    private ItemActivity activity;
 
     private OnFragmentInteractionListener mListener;
 
@@ -58,13 +76,19 @@ public class AllItemsFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        activity = (ItemActivity) getActivity();
+        items = new ArrayList<>(Arrays.asList(activity.buildItems()));
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_all_items, container, false);
+        rootView = inflater.inflate(R.layout.fragment_all_items, container, false);
+        GridView gridView = (GridView) rootView.findViewById(R.id.gridview);
+        gridView.setAdapter(new MyAdapter(getActivity().getApplicationContext()));
+        return rootView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -91,6 +115,11 @@ public class AllItemsFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onClick(View view) {
+        Log.w("Button clicked", view.toString());
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -105,4 +134,86 @@ public class AllItemsFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+    private class MyAdapter extends BaseAdapter
+    {
+        private List<ItemModel> itemList = new ArrayList<ItemModel>();
+        private LayoutInflater inflater;
+
+        public MyAdapter(Context context)
+        {
+            inflater = LayoutInflater.from(context);
+            for(ItemModel item: items) {
+                itemList.add(item);
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return itemList.size();
+        }
+
+        @Override
+        public Object getItem(int i)
+        {
+            return itemList.get(i);
+        }
+
+        @Override
+        public long getItemId(int i)
+        {
+            return i;
+        }
+
+        @Override
+        public View getView(int i, View view, ViewGroup viewGroup)
+        {
+            View v = view;
+            ImageView picture;
+            TextView name;
+            Button add;
+
+            if(v == null)
+            {
+                v = inflater.inflate(R.layout.itemhiddenlayout, viewGroup, false);
+                v.setTag(R.id.picture, v.findViewById(R.id.picture));
+                v.setTag(R.id.text, v.findViewById(R.id.title_item));
+                v.setTag(R.id.add, v.findViewById(R.id.item_add));
+            }
+
+            picture = (ImageView)v.getTag(R.id.picture);
+            name = (TextView)v.getTag(R.id.text);
+            add = (Button)v.getTag(R.id.add);
+            add.setTag(i);
+
+            //set click listener
+            add.setOnClickListener(
+                    new Button.OnClickListener() {
+                        public void onClick(View v) {
+                            Log.w("Button clicked", v.getTag().toString());
+                            AllItemsFragment.this.addCheckout(Integer.parseInt(v.getTag().toString()));
+                        }
+                    }
+            );
+
+            ItemModel item = (ItemModel) getItem(i);
+
+            //picture.setBackgroundColor();
+            name.setText(item.getItemName());
+            add.setText("Add +");
+
+
+            return v;
+        }
+
+    }
+
+    public void addCheckout (int itemIndex) {
+
+        ItemModel item = items.get(itemIndex);
+        activity.addCheckoutUI(item);
+
+
+    }
+
 }

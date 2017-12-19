@@ -22,9 +22,13 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,8 +45,11 @@ public class ItemActivity extends AppCompatActivity  {
     private ViewPager viewPager;
     private View mProgressView;
     private View mActivityPageView;
+    private View rootView;
     private ItemDataTask mItemTask = null;
     private ItemModel[] items;
+    private ItemActivity self = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,10 +73,11 @@ public class ItemActivity extends AppCompatActivity  {
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
-
+        rootView = findViewById(R.id.item_activity);
         mActivityPageView = findViewById(R.id.viewpager);
         mProgressView = findViewById(R.id.data_progress);
 
+        self = this;
     }
 
     @Override
@@ -202,6 +210,10 @@ public class ItemActivity extends AppCompatActivity  {
             mItemTask = null;
             showProgress(false);
 
+            if(success) {
+                self.buildItems();
+            }
+
         }
 
         @Override
@@ -211,13 +223,21 @@ public class ItemActivity extends AppCompatActivity  {
         }
     }
 
-    public void buildItems() {
+    public ItemModel[] buildItems() {
 
-        Point size = new Point();
-        getWindowManager().getDefaultDisplay().getSize(size);
-
-        int w = size.x/3;
+        return items;
 
     }
 
+    public void addCheckoutUI(ItemModel item) {
+
+        RelativeLayout layout  = (RelativeLayout) rootView.findViewById(R.id.checkout);
+
+        View view = LayoutInflater.from(this).inflate(R.layout.line_item, null);
+
+        TextView textview = (TextView)view.findViewById(R.id.item_Text);
+        textview.setText("1 " + item.getItemName() + " added");
+        layout.addView(view);
+        layout.setVisibility(View.VISIBLE);
+    }
 }
