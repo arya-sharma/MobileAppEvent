@@ -16,6 +16,6 @@
         android:scrollbars="horizontal"
         android:background="@color/colorWhite"
         android:numColumns="2"
-        android:paddingBottom="100dp"/>
+        android:paddingBottom="60dp"/>
 
 </FrameLayout>

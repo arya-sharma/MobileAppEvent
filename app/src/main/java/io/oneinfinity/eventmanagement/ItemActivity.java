@@ -26,11 +26,13 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -49,6 +51,9 @@ public class ItemActivity extends AppCompatActivity  {
     private ItemDataTask mItemTask = null;
     private ItemModel[] items;
     private ItemActivity self = null;
+    private HashMap<String, View> lineItems = new HashMap<>();
+    private int count = 0;
+    LinearLayout layout;
 
 
     @Override
@@ -76,6 +81,7 @@ public class ItemActivity extends AppCompatActivity  {
         rootView = findViewById(R.id.item_activity);
         mActivityPageView = findViewById(R.id.viewpager);
         mProgressView = findViewById(R.id.data_progress);
+        layout  = (LinearLayout) rootView.findViewById(R.id.checkout);
 
         self = this;
     }
@@ -230,14 +236,40 @@ public class ItemActivity extends AppCompatActivity  {
     }
 
     public void addCheckoutUI(ItemModel item) {
-
-        RelativeLayout layout  = (RelativeLayout) rootView.findViewById(R.id.checkout);
-
-        View view = LayoutInflater.from(this).inflate(R.layout.line_item, null);
-
-        TextView textview = (TextView)view.findViewById(R.id.item_Text);
+        View C = getLayoutInflater().inflate(R.layout.line_item, layout, false);
+        lineItems.put(String.valueOf(count), C);
+        TextView textview = (TextView)C.findViewById(R.id.item_Text);
         textview.setText("1 " + item.getItemName() + " added");
-        layout.addView(view);
+        Button checkout = (Button)C.findViewById(R.id.item_checkout);
+        Button remove = (Button)C.findViewById(R.id.item_remove);
+        LinearLayout layoutc = (LinearLayout)C.findViewById(R.id.item_checkout_lay);
+        //set click listener
+        remove.setTag(count);
+        remove.setOnClickListener(
+                new Button.OnClickListener() {
+                    public void onClick(View v) {
+                        Log.w("Button clicked", v.getTag().toString());
+                        View lineItem = lineItems.remove(v.getTag().toString());
+                        layout.removeView(lineItem);
+                        layout.setMinimumHeight(layout.getHeight()-160);
+                        count --;
+                        if(Integer.parseInt(v.getTag().toString()) == 0 && lineItems.size() > -1){
+                            View vl = (View) lineItems.values().toArray()[0];
+                            Button checkout = (Button)vl.findViewById(R.id.item_checkout);
+                            checkout.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }
+        );
+        if(count == 0) {
+            Log.w("Counting",  String.valueOf(count));
+            layoutc.setVisibility(View.VISIBLE);
+            checkout.setVisibility(View.VISIBLE);
+        }
+        layout.addView(C);
+
+        layout.setMinimumHeight(count*160);
+        count++;
         layout.setVisibility(View.VISIBLE);
     }
 }

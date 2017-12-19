@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="50dp"
-    android:layout_alignParentBottom="true"
     android:background="@color/orange"
-    >
+    android:orientation="horizontal">
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent">
         <Button
             android:layout_width="60dp"
-            android:layout_height="match_parent"
+            android:layout_height="50dp"
             android:id="@+id/item_remove"
             android:textSize="18sp"
             android:background="@color/orange"
@@ -19,19 +18,26 @@
             android:text="X"/>
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="50dp"
             android:gravity="center_vertical"
             android:layout_centerHorizontal="true"
             android:id="@+id/item_Text"
             android:text="Blah Blah"/>
     </LinearLayout>
-    <Button
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginVertical="8dp"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="8dp"
-        android:text="Checkout"
-        android:id="@+id/item_checkout"
-        android:background="@color/colorPrimary"/>
-</RelativeLayout>
+        android:visibility="visible"
+        android:id="@+id/item_checkout_lay"
+        android:gravity="right">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:layout_margin="8dp"
+            android:text="Checkout"
+            android:visibility="gone"
+            android:id="@+id/item_checkout"
+            android:background="@color/colorPrimary"/>
+    </LinearLayout>
+
+</LinearLayout>
