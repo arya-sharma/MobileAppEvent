@@ -51,10 +51,13 @@ public class ItemActivity extends AppCompatActivity  {
     private View rootView;
     private ItemDataTask mItemTask = null;
     private ItemModel[] items;
+    private HashMap<String, ItemModel> itemsMap = new HashMap<>();
     private ItemActivity self = null;
     private TreeMap<String, LineItems> lineItems = new TreeMap<>();
     private int count = 0;
     LinearLayout layout;
+    private Intent checkoutIntent;
+    private AllItemsFragment allItemFragment;
 
 
     @Override
@@ -97,7 +100,8 @@ public class ItemActivity extends AppCompatActivity  {
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new AllItemsFragment(), "ALL ITEMS");
+        allItemFragment = new AllItemsFragment();
+        adapter.addFragment(allItemFragment, "ALL ITEMS");
         adapter.addFragment(new OtherFragment(), "OTHER");
         viewPager.setAdapter(adapter);
     }
@@ -145,7 +149,7 @@ public class ItemActivity extends AppCompatActivity  {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_item1:
-                JwtModel token = new JwtModel("");
+                JwtModel token = new JwtModel("","");
                 this.startActivity(loginIntent);
 
                 return true;
@@ -206,8 +210,13 @@ public class ItemActivity extends AppCompatActivity  {
         @Override
         protected Boolean doInBackground(Void... params) {
 
-            ItemService service = new ItemService(jwtToken);
-            items = service.execute();
+            if(ItemModel.getItems() != null) {
+                items = ItemModel.getItems();
+            }
+            else {
+                ItemService service = new ItemService(jwtToken);
+                items = service.execute();
+            }
 
             return true;
         }
@@ -231,12 +240,16 @@ public class ItemActivity extends AppCompatActivity  {
     }
 
     public ItemModel[] buildItems() {
-
+        //build map
+        itemsMap = new HashMap<>();
+        for(int i=0; i < items.length; i++) {
+            itemsMap.put(items[i].getItemId(), items[i]);
+        }
         return items;
 
     }
 
-    public void addCheckoutUI(ItemModel item, int index) {
+    public void addCheckoutUI(ItemModel item) {
         View C;
         LineItems line;
         TextView textview;
@@ -251,20 +264,39 @@ public class ItemActivity extends AppCompatActivity  {
         }
         else {
             C = getLayoutInflater().inflate(R.layout.line_item, layout, false);
+            allItemFragment.addItems();
             line = new LineItems(item.getItemId(), C, item.getItemName());
             lineItems.put(item.getItemId(), line);
             line.setItemCount(1);
+            line.setItemImage(item.getItemImage());
+            line.setItemPrice(item.getItemPrice());
             textview = (TextView)C.findViewById(R.id.item_Text);
             textview.setText("1 " + item.getItemName() + " added");
             layout.addView(C);
 
             layout.setMinimumHeight(count*160);
             Button checkout = (Button)C.findViewById(R.id.item_checkout);
+            checkout.setOnClickListener(
+                    new Button.OnClickListener() {
+                        public void onClick(View v) {
+                            ArrayList<LineItems> lineList = new ArrayList<>(lineItems.values());
+                            if(CheckOutCartModel.getCart() == null){
+                                CheckOutCartModel.getCart(lineList);
+                            }
+                            else{
+                                CheckOutCartModel.getCart().setLineItems(lineList);
+                            }
+                            checkoutIntent = new Intent(ItemActivity.this, CheckoutActivity.class);
+                            ItemActivity.this.startActivity(checkoutIntent);
+                        }
+                    });
+
             Button remove = (Button)C.findViewById(R.id.item_remove);
             if(count == 0) {
                 LinearLayout layoutC = (LinearLayout)C.findViewById(R.id.item_checkout_lay);
                 layoutC.setVisibility(View.VISIBLE);
                 checkout.setVisibility(View.VISIBLE);
+                line.setLeader(true);
             }
 
             //set remove click listener
@@ -282,11 +314,12 @@ public class ItemActivity extends AppCompatActivity  {
                                 lineItems.remove(line.getItemId());
                                 Log.w("Count of lines", String.valueOf(count));
                                 count --;
+                                allItemFragment.removeItems();
                                 Log.w("LineItmes", String.valueOf(lineItems.size()));
-                                if(count > 0) {
-
+                                if(count > 0 && line.isLeader()) {
                                     LineItems lineFirst = lineItems.firstEntry().getValue();
                                     View vl = lineFirst.getView();
+                                    lineFirst.setLeader(true);
                                     Button checkout = (Button) vl.findViewById(R.id.item_checkout);
                                     checkout.setVisibility(View.VISIBLE);
                                 }
@@ -298,13 +331,6 @@ public class ItemActivity extends AppCompatActivity  {
                                 textview.setText(line.getItemCount() +" " + line.getItemName() + " added");
                             }
 
-//                            Log.w("Counter", String.valueOf(count));
-//
-//                            if(Integer.parseInt(v.getTag().toString()) == 0 && count > -1){
-//                                View vl = (View) lineItems.values().toArray()[0];
-//                                Button checkout = (Button)vl.findViewById(R.id.item_checkout);
-//                                checkout.setVisibility(View.VISIBLE);
-//                            }
                         }
                     }
             );
@@ -319,50 +345,19 @@ public class ItemActivity extends AppCompatActivity  {
         layout.setVisibility(View.VISIBLE);
     }
 
-    private class LineItems {
-
-        private String itemId;
-        private View view;
-        private int itemCount;
-        private String itemName;
-
-        LineItems(String itemId, View view, String itemName) {
-            this.itemId = itemId;
-            this.view = view;
-            this.itemName = itemName;
+    public void fragReady(){
+        Log.w("Frag started", "Frug");
+        if(CheckOutCartModel.getCart() != null) {
+            CheckOutCartModel cart = CheckOutCartModel.getCart();
+            ArrayList<LineItems> items = cart.getLineItems();
+            for(LineItems item : items) {
+                for(int count=0; count < item.getItemCount(); count++){
+                    addCheckoutUI(itemsMap.get(item.getItemId()));
+                }
+            }
         }
-
-        public String getItemName() {
-            return itemName;
+        else{
+            Log.w("Frag started", "null cart");
         }
-
-        public void setItemName(String itemName) {
-            this.itemName = itemName;
-        }
-
-        public int getItemCount() {
-            return itemCount;
-        }
-
-        public void setItemCount(int itemCount) {
-            this.itemCount = itemCount;
-        }
-
-        public String getItemId() {
-            return itemId;
-        }
-
-        public void setItemId(String itemId) {
-            this.itemId = itemId;
-        }
-
-        public View getView() {
-            return view;
-        }
-
-        public void setView(View view) {
-            this.view = view;
-        }
-
     }
 }

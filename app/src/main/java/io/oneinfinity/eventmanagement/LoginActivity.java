@@ -326,14 +326,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             LoginService login = new LoginService(mEmail, mPassword);
             String token = login.execute();
-            Log.w("Login act", token);
 
             if(token.length() == 0) {
                 return false;
             }
             else{
 
-                new JwtModel(token);
+                new JwtModel(token, mPassword);
                 return true;
             }
         }
@@ -344,7 +343,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
 
             if (success) {
-                Log.w("Login Activity", String.valueOf(success));
                 finish();
                 self.startActivity(mainIntent);
             } else {

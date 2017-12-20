@@ -8,4 +8,6 @@
     <color name="lightGrey">#f1f1f1</color>
     <color name="green">#92d36e</color>
     <color name="orange">#ff6624</color>
+    <color name="mainGrey">#ebebeb</color>
+    <color name="black">#000000</color>
 </resources>

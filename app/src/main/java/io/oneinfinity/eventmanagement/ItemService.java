@@ -32,6 +32,9 @@ public class ItemService {
     }
 
     public ItemModel[] execute(){
+        if(ItemModel.getItems() != null) {
+            return ItemModel.getItems();
+        }
         String url = BuildConfig.ITEM_URL;
         InputStream inputStream = null;
         ItemModel[] items = null;
@@ -62,6 +65,7 @@ public class ItemService {
                 itemArray = new JSONArray(result);
                 Log.w("Dtaaa", itemArray.toString());
                 items = parseItems(itemArray);
+                ItemModel.setItems(items);
             }
             else {
                 result = "";

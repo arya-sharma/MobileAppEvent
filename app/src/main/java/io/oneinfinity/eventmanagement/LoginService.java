@@ -66,7 +66,6 @@ public class LoginService {
                 result = convertInputStreamToString(inputStream);
                 jwtToken = new JSONObject(result);
                 result = jwtToken.getString("token");
-                Log.w("Lgi service", jwtToken.toString());
             }
             else {
                 result = "";
@@ -76,8 +75,6 @@ public class LoginService {
             Log.d("InputStream", e.getLocalizedMessage());
         }
 
-        // 11. return result
-        Log.w("Login", "Login Came here");
 
         return result;
 

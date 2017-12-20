@@ -13,9 +13,18 @@ public class ItemModel {
      private float itemPrice;
      private String itemImage;
      private int itemCount;
+     private static ItemModel[] items;
 
      ItemModel() {
 
+     }
+
+     public static void setItems(ItemModel[] items){
+         ItemModel.items = items;
+     }
+
+     public static ItemModel[] getItems(){
+         return ItemModel.items;
      }
 
     public String getItemId() {

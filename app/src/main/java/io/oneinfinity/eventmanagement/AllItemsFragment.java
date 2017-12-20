@@ -79,7 +79,13 @@ public class AllItemsFragment extends Fragment  implements View.OnClickListener 
         }
 
         activity = (ItemActivity) getActivity();
-        items = new ArrayList<>(Arrays.asList(activity.buildItems()));
+        if(ItemModel.getItems() != null) {
+            items = new ArrayList<>(Arrays.asList(ItemModel.getItems()));
+        }
+        else {
+            items = new ArrayList<>(Arrays.asList(activity.buildItems()));
+        }
+
     }
 
     @Override
@@ -90,6 +96,15 @@ public class AllItemsFragment extends Fragment  implements View.OnClickListener 
         gridView = (GridView) rootView.findViewById(R.id.gridview);
         gridView.setAdapter(new MyAdapter(getActivity().getApplicationContext()));
         return rootView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.w("Frag started", "Fragging");
+        ItemActivity activity = (ItemActivity) getActivity();
+        activity.fragReady();
+        Log.w("Frag started", "starting frag");
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -182,6 +197,8 @@ public class AllItemsFragment extends Fragment  implements View.OnClickListener 
             }
 
             picture = (ImageView)v.getTag(R.id.picture);
+           // String url = "https://www.gstatic.com/webp/gallery3/1.sm.png";
+
             name = (TextView)v.getTag(R.id.text);
             add = (Button)v.getTag(R.id.add);
             add.setTag(i);
@@ -200,7 +217,8 @@ public class AllItemsFragment extends Fragment  implements View.OnClickListener 
             //picture.setBackgroundColor();
             name.setText(item.getItemName() + " - " + item.getItemPrice());
             add.setText("Add +");
-
+            String url = BuildConfig.IMAGE_URL + item.getItemImage();
+            new AsyncTaskLoadImage(picture, 250, 400).execute(url);
 
             return v;
         }
@@ -210,18 +228,26 @@ public class AllItemsFragment extends Fragment  implements View.OnClickListener 
     public void addCheckout (int itemIndex) {
 
         ItemModel item = items.get(itemIndex);
-        activity.addCheckoutUI(item, itemIndex);
-        //removeItems();
+        activity.addCheckoutUI(item);
+        //addItems();
 
     }
 
     //change the padding as items removed and added
-    public void removeItems() {
-        int paddingDp = 50;
+    public void addItems() {
+        int paddingDp = 45;
         float density = this.getResources().getDisplayMetrics().density;
         int paddingPx = (int)(paddingDp * density);
         int paddingOrg = gridView.getPaddingBottom();
         gridView.setPadding(0, 0,0, paddingOrg + paddingPx);
+    }
+
+    public void removeItems() {
+        int paddingDp = 45;
+        float density = this.getResources().getDisplayMetrics().density;
+        int paddingPx = (int)(paddingDp * density);
+        int paddingOrg = gridView.getPaddingBottom();
+        gridView.setPadding(0, 0,0, paddingOrg - paddingPx);
     }
 
 }

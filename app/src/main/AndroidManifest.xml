@@ -34,6 +34,13 @@
             android:label="@string/item_name"
             android:theme="@style/AppTheme.Tab_Activity">
         </activity>
+        <activity
+            android:name=".CheckoutActivity"
+            android:label="Checkout">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ItemActivity" />
+        </activity>
     </application>
 
 </manifest>

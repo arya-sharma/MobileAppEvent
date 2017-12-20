@@ -7,9 +7,11 @@ package io.oneinfinity.eventmanagement;
 public class JwtModel {
 
     public static String jwtToken;
+    public static String password;
 
-    JwtModel(String token) {
+    JwtModel(String token, String password) {
         JwtModel.jwtToken = token;
+        JwtModel.password = password;
     }
 
 }

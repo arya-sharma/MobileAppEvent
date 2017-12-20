@@ -15,6 +15,7 @@ android {
         debug {
             buildConfigField "String", "LOGIN_URL", '"http://192.168.0.11:4040/api/merchant/login"'
             buildConfigField "String", "ITEM_URL", '"http://192.168.0.11:4040/api/merchant/getItems"'
+            buildConfigField "String", "IMAGE_URL", '"http://192.168.0.11:4040/images/"'
         }
         release {
             minifyEnabled false
