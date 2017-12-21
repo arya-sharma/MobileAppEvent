@@ -25,9 +25,10 @@ android {
 }
 
 dependencies {
-    compile group: 'org.apache.httpcomponents' , name: 'httpclient-android' , version: '4.3.5.1'
-    compile 'com.android.support:design:26.1.0'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation group: 'org.apache.httpcomponents' , name: 'httpclient-android' , version: '4.3.5.1'
+    implementation 'com.google.android.gms:play-services-vision:11.0.2'
+    implementation 'com.android.support:design:26.1.0'
     implementation 'com.android.support:appcompat-v7:26.1.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'

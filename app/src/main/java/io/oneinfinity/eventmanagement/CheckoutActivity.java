@@ -152,6 +152,17 @@ public class CheckoutActivity extends AppCompatActivity {
         charge.setText("Charge");
         charge.setBackgroundColor(Color.parseColor("#ff6624"));
         charge.setTextColor(Color.WHITE);
+
+        //Charge intent
+        charge.setOnClickListener(
+                new Button.OnClickListener() {
+                    public void onClick(View v) {
+                        Intent chargeIntent = new Intent(CheckoutActivity.this, ChargeActivity.class);
+                        CheckoutActivity.this.startActivity(chargeIntent);
+                    }
+
+                });
+
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         params.topMargin = 20;
         mainView.addView(charge, params);
