@@ -48,7 +48,6 @@ public class ItemService {
             HttpClient httpclient = new DefaultHttpClient();
 
             url = url + eventId;
-            Log.w("Ping", "Pong");
             // 2. make POST request to the given URL
             HttpGet httpGet = new HttpGet(url);
 

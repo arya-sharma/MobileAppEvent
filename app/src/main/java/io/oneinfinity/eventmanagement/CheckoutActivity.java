@@ -38,6 +38,7 @@ public class CheckoutActivity extends AppCompatActivity {
         setContentView(R.layout.checkout_layout);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mainView = (LinearLayout) findViewById(R.id.checkout_form);
+        onStartActivity();
     }
 
     public void onGoToItems(View view) {
@@ -46,10 +47,8 @@ public class CheckoutActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    public void onStart() {
+    public void onStartActivity() {
 
-        super.onStart();
         TextView textview;
         TextView priceview;
         float totalAmount = 0;
