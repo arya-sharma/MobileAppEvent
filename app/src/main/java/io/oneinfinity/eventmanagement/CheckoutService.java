@@ -53,6 +53,7 @@ public class CheckoutService {
             JSONObject jsonObject = new JSONObject();
             jsonObject.accumulate("secret", this.secret);
             jsonObject.accumulate("purchaseAmount", this.purchaseAmount);
+            jsonObject.accumulate("eventId", EventModel.eventId);
             JSONArray itemArray = new JSONArray();
             for(LineItems item: this.lineItems) {
                 JSONObject line = new JSONObject();
@@ -88,8 +89,11 @@ public class CheckoutService {
                 response = new JSONObject(result);
                 Log.w("Order Response", response.toString());
                // result = jwtToken.getString("token");
-                if(response.get("data") != null) {
+                if(response.has("data")) {
                     result = "success";
+                }
+                else{
+                    result = response.getString("message");
                 }
             }
             else {

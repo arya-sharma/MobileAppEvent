@@ -33,13 +33,25 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".EventActivity"
+            android:label="Select Event" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".LoginActivity" />
+        </activity>
+        <activity
+            android:name=".TopupActivity"
+            android:label="Top Up QR Code" >
+        </activity>
+        <activity
             android:name=".MainActivity"
             android:label="@string/main_name" >
         </activity>
         <activity
             android:name=".ItemActivity"
             android:label="@string/item_name"
-            android:theme="@style/AppTheme.Tab_Activity">
+            android:theme="@style/AppTheme.Tab_Activity"
+            android:configChanges="orientation|screenSize">
         </activity>
         <activity
             android:name=".CheckoutActivity"
@@ -51,6 +63,10 @@
         <activity
             android:name=".ChargeActivity"
             android:label="Charge Customer">
+        </activity>
+        <activity
+            android:name=".TopupCharge"
+            android:label="Top-Up QR Code">
         </activity>
         <provider
             android:name="android.support.v4.content.FileProvider"

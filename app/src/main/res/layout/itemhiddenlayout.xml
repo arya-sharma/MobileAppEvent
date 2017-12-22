@@ -11,7 +11,7 @@
         android:layout_margin="2dp">
         <View
             android:layout_width="match_parent"
-            android:layout_height="280dp"
+            android:layout_height="200dp"
             android:background="@drawable/shape"
             />
         <LinearLayout
@@ -32,19 +32,22 @@
             android:id="@+id/title_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
             android:paddingTop="15dp"
             android:paddingBottom="15dp"
             android:textAlignment="center"
             android:textColor="@android:color/white"
-            android:textSize="20sp"
+            android:textSize="18sp"
+            android:lines="2"
+            android:maxLength="40"
+            android:ellipsize="end"
             android:layout_marginHorizontal="4dp"
             android:background="@color/colorPrimary"
             />
         <Button
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="30dp"
             android:id="@+id/item_add"
             android:layout_marginHorizontal="4dp"
             android:background="@color/colorPrimary"

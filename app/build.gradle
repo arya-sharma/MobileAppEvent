@@ -18,7 +18,8 @@ android {
             buildConfigField "String", "ITEM_URL", '"http://192.168.0.11:4040/api/merchant/getItems"'
             buildConfigField "String", "IMAGE_URL", '"http://192.168.0.11:4040/images/"'
             buildConfigField "String", "CHECKOUT_URL", '"http://192.168.0.11:4040/api/ticket/buyItems"'
-            buildConfigField "String", "EVENT_URL", '"http://192.168.0.11:4040//api/merchant/list/event"'
+            buildConfigField "String", "EVENT_URL", '"http://192.168.0.11:4040/api/merchant/list/event"'
+            buildConfigField "String", "TOPUP_URL", '"http://192.168.0.11:4040/api/ticket/buyCredit"'
         }
         release {
             minifyEnabled false

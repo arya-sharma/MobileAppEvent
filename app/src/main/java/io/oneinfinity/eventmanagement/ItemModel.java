@@ -12,6 +12,7 @@ public class ItemModel {
      private String eventid;
      private float itemPrice;
      private String itemImage;
+     private String currency;
      private int itemCount;
      private static ItemModel[] items;
 
@@ -26,6 +27,14 @@ public class ItemModel {
      public static ItemModel[] getItems(){
          return ItemModel.items;
      }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
 
     public String getItemId() {
         return itemId;

@@ -56,8 +56,9 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         String password = txtUrl.getText().toString();
                         Log.w("Password",JwtModel.password);
-                        if(JwtModel.password == password) {
+                        if(JwtModel.password.equals(password)) {
                             //dialogTop.setMessage("");
+                            startActivity(new Intent(MainActivity.this,TopupActivity.class));
                             dialog.dismiss();
                         }
                         else{
@@ -99,4 +100,5 @@ public class MainActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
 }

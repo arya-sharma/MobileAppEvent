@@ -39,7 +39,7 @@ public class ItemService {
         InputStream inputStream = null;
         ItemModel[] items = null;
         String result = "";
-        String eventId = "/5a32ddc69e15813388b3c2b9";
+        String eventId = "/" + EventModel.eventId;
         JSONArray itemArray;
         try {
 
@@ -62,7 +62,6 @@ public class ItemService {
             if(inputStream != null) {
                 result = convertInputStreamToString(inputStream);
                 itemArray = new JSONArray(result);
-                Log.w("Dtaaa", itemArray.toString());
                 items = parseItems(itemArray);
                 ItemModel.setItems(items);
             }
@@ -92,6 +91,7 @@ public class ItemService {
                 item.setItemPrice(rec.getLong("itemPrice"));
                 item.setItemImage(rec.getString("itemImage"));
                 item.setItemCount(rec.getInt("itemCount"));
+                item.setCurrency(rec.getString("currency"));
                 arrayItems[i] = item;
             } catch (JSONException e) {
                 e.printStackTrace();

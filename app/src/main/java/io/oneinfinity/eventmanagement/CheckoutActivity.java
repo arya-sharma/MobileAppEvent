@@ -51,6 +51,25 @@ public class CheckoutActivity extends AppCompatActivity {
 
         TextView textview;
         TextView priceview;
+        int imageWidth = 0;
+        int imageHeight = 0;
+        int size = DeviceSize.width;
+        if(size <= 480) {
+            imageHeight = 100;
+            imageWidth = 60;
+        }
+        if(size <= 720 && size > 480) {
+            imageHeight = 160;
+            imageWidth = 80;
+        }
+        if(size <= 1080 && size > 768) {
+            imageHeight = 180;
+            imageWidth = 100;
+        }
+        if(size > 1080) {
+            imageHeight = 200;
+            imageWidth = 120;
+        }
         float totalAmount = 0;
         if(CheckOutCartModel.getCart() != null) {
             items = CheckOutCartModel.getCart().getLineItems();
@@ -60,7 +79,8 @@ public class CheckoutActivity extends AppCompatActivity {
                 View view = getLayoutInflater().inflate(R.layout.checkout_items, mainView, false);
                 ImageView picture = (ImageView)view.findViewById(R.id.picture);
                 String url = BuildConfig.IMAGE_URL + item.getItemImage();
-                new AsyncTaskLoadImage(picture, 100, 180).execute(url);
+
+                new AsyncTaskLoadImage(picture, imageWidth, imageHeight).execute(url);
                 mapView.put(item.getItemId(), view);
                 textview = (TextView)view.findViewById(R.id.line);
                 //4 X Beer (Rs. 50)
@@ -142,7 +162,7 @@ public class CheckoutActivity extends AppCompatActivity {
     public void createGrandTotal(float total) {
         grandTotal = getLayoutInflater().inflate(R.layout.grand_total, mainView, false);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 180);
-        layoutParams.setMargins(0, 300, 0, 200);
+        layoutParams.setMargins(0, 40, 0, 10);
         grandTotal.setLayoutParams(layoutParams);
         TextView text = (TextView)grandTotal.findViewById(R.id.grand_checkout);
         text.setText("Grand Total: Rs." + total );

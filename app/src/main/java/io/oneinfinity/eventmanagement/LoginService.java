@@ -32,6 +32,7 @@ public class LoginService {
         String url = BuildConfig.LOGIN_URL;
         InputStream inputStream = null;
         String result = "";
+        String response;
         JSONObject jwtToken = null;
         try {
 
@@ -63,12 +64,22 @@ public class LoginService {
 
             // 10. convert inputstream to string
             if(inputStream != null) {
-                result = convertInputStreamToString(inputStream);
-                jwtToken = new JSONObject(result);
-                result = jwtToken.getString("token");
+                response = convertInputStreamToString(inputStream);
+                jwtToken = new JSONObject(response);
+                Log.w("Ouput", jwtToken.toString());
+                if(jwtToken.has("token")) {
+                    String token = jwtToken.getString("token");
+                    new JwtModel(token, this.password);
+                    new MerchantModel(jwtToken.getString("id"));
+                    result = "success";
+                }
+                else {
+                    result = jwtToken.getString("message");
+                }
+
             }
             else {
-                result = "";
+                result = "Auth failed";
             }
 
         } catch (Exception e) {

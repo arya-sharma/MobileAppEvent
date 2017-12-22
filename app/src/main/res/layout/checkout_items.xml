@@ -40,12 +40,12 @@
                     android:layout_height="match_parent"
                     android:textColor="@color/colorWhite"
                     android:id="@+id/line"
-                    android:textSize="20sp"/>
+                    android:textSize="16sp"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:id="@+id/price"
-                    android:textSize="20sp"/>
+                    android:textSize="16sp"/>
 
             </LinearLayout>
 

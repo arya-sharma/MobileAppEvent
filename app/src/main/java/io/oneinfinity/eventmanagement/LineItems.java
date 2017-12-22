@@ -14,12 +14,21 @@ public class LineItems {
     private String itemName;
     private String itemImage;
     private float itemPrice;
+    private String currency;
     private boolean isLeader;
 
     LineItems(String itemId, View view, String itemName) {
         this.itemId = itemId;
         this.view = view;
         this.itemName = itemName;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
     }
 
     public float getItemPrice() {

@@ -187,6 +187,8 @@ public class AllItemsFragment extends Fragment  implements View.OnClickListener 
             ImageView picture;
             TextView name;
             Button add;
+            int imageWidth = 0;
+            int imageHeight = 0;
 
             if(v == null)
             {
@@ -211,14 +213,31 @@ public class AllItemsFragment extends Fragment  implements View.OnClickListener 
                     }
                 }
             );
-
+            //Scale images as per deivce width
+            int size = DeviceSize.width;
+            if(size <= 480) {
+                imageHeight = 100;
+                imageWidth = 90;
+            }
+            if(size <= 720 && size > 480) {
+                imageHeight = 160;
+                imageWidth = 120;
+            }
+            if(size <= 1080 && size > 768) {
+                imageHeight = 400;
+                imageWidth = 250;
+            }
+            if(size > 1080) {
+                imageHeight = 480;
+                imageWidth = 300;
+            }
             ItemModel item = (ItemModel) getItem(i);
 
             //picture.setBackgroundColor();
             name.setText(item.getItemName() + " - " + item.getItemPrice());
             add.setText("Add +");
             String url = BuildConfig.IMAGE_URL + item.getItemImage();
-            new AsyncTaskLoadImage(picture, 250, 400).execute(url);
+            new AsyncTaskLoadImage(picture, imageWidth, imageHeight).execute(url);
 
             return v;
         }

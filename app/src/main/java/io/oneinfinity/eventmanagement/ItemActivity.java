@@ -22,6 +22,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -80,6 +81,8 @@ public class ItemActivity extends AppCompatActivity  {
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
 
+        mItemTask = new ItemDataTask(JwtModel.jwtToken);
+        mItemTask.execute((Void) null);
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
         rootView = findViewById(R.id.item_activity);
@@ -88,14 +91,13 @@ public class ItemActivity extends AppCompatActivity  {
         layout  = (LinearLayout) rootView.findViewById(R.id.checkout);
 
         self = this;
+
     }
 
     @Override
     public void onStart() {
         super.onStart();
         showProgress(true);
-        mItemTask = new ItemDataTask(JwtModel.jwtToken);
-        mItemTask.execute((Void) null);
     }
 
     private void setupViewPager(ViewPager viewPager) {

@@ -1,5 +1,30 @@
 package io.oneinfinity.eventmanagement;
 
+/**
+ * Created by ancha on 12/21/2017.
+ */
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.util.SparseArray;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+
+import com.google.android.gms.vision.CameraSource;
+import com.google.android.gms.vision.Detector;
+import com.google.android.gms.vision.barcode.Barcode;
+import com.google.android.gms.vision.barcode.BarcodeDetector;
+
+import java.io.IOException;
+import java.util.ArrayList;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -28,7 +53,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  * Created by ujjwal on 12/20/2017.
  */
 
-public class ChargeActivity extends AppCompatActivity {
+public class TopupCharge extends AppCompatActivity {
 
     private SurfaceView cameraView;
     private TextView barcodeInfo;
@@ -39,9 +64,9 @@ public class ChargeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.qr_charge_layout);
+        setContentView(R.layout.qr_topup);
 
-        cameraView = (SurfaceView)findViewById(R.id.camera_view);
+        cameraView = (SurfaceView)findViewById(R.id.camera_view_top);
         barcodeInfo = (TextView)findViewById(R.id.qr_charge_title);
     }
 
@@ -60,14 +85,13 @@ public class ChargeActivity extends AppCompatActivity {
                     }
                 });
 
-        Log.d("Scanning", "Clicked");
         barcodeDetector =
-                new BarcodeDetector.Builder(ChargeActivity.this)
+                new BarcodeDetector.Builder(TopupCharge.this)
                         .setBarcodeFormats(Barcode.QR_CODE)
                         .build();
 
         cameraSource = new CameraSource
-                .Builder(ChargeActivity.this, barcodeDetector)
+                .Builder(TopupCharge.this, barcodeDetector)
                 .setRequestedPreviewSize(640, 480)
                 .build();
 
@@ -99,6 +123,7 @@ public class ChargeActivity extends AppCompatActivity {
 
         barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
 
+            int detectionCount = 0;
             boolean callMade = false;
 
             @Override
@@ -109,29 +134,19 @@ public class ChargeActivity extends AppCompatActivity {
             public void receiveDetections(Detector.Detections<Barcode> detections) {
                 final SparseArray<Barcode> barcodes = detections.getDetectedItems();
 
-                if (barcodes.size() != 0 ) {
+                Log.w("Detections", String.valueOf(detectionCount));
+                Log.w("Barcodes", String.valueOf(barcodes.size()));
 
+                if (barcodes.size() != 0 ) {
+                    Log.d("private key", barcodes.valueAt(0).displayValue);
+                    detectionCount++;
+                    Log.w("NewDetections", String.valueOf(detectionCount));
                     if(callMade) {
                         return;
                     }
-//                    barcodeInfo.post(new Runnable() {    // Use the post method of the TextView
-//                        public void run() {
-////                            barcodeInfo.setText(    // Update the TextView
-////                                    barcodes.valueAt(0).displayValue
-////                            );
-//                        }
-//                    });
-                    Log.d("private key", barcodes.valueAt(0).displayValue);
-                    float total = 0;
-                    ArrayList<LineItems> items;
-                    if(CheckOutCartModel.getCart() != null) {
-                        items = CheckOutCartModel.getCart().getLineItems();
-                        for(LineItems item: items){
-                            total = total + item.getItemPrice()*item.getItemCount();
-                        }
 
-                        CheckoutService service = new CheckoutService(barcodes.valueAt(0).displayValue,
-                                total, items);
+                        TopupService service = new TopupService(barcodes.valueAt(0).displayValue,
+                                TopupModel.amount);
                         callMade = true;
                         final String res = service.execute();
 
@@ -139,18 +154,17 @@ public class ChargeActivity extends AppCompatActivity {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Log.w("Running dialog", "yes");
-                                    new SweetAlertDialog(ChargeActivity.this, SweetAlertDialog.SUCCESS_TYPE)
-                                            .setTitleText("Order Placed!")
+                                    new SweetAlertDialog(TopupCharge.this, SweetAlertDialog.SUCCESS_TYPE)
+                                            .setTitleText("Topup Complete!")
                                             .setContentText("Click to go to Main menu!")
                                             .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                                                 @Override
                                                 public void onClick(SweetAlertDialog sDialog) {
                                                     sDialog.dismissWithAnimation();
                                                     finish();
-                                                    Intent mainIntent = new Intent(ChargeActivity.this,
+                                                    Intent mainIntent = new Intent(TopupCharge.this,
                                                             MainActivity.class);
-                                                    ChargeActivity.this.startActivity(mainIntent);
+                                                    TopupCharge.this.startActivity(mainIntent);
                                                 }
                                             })
                                             .show();
@@ -159,27 +173,30 @@ public class ChargeActivity extends AppCompatActivity {
 
                         }
                         else {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    new SweetAlertDialog(ChargeActivity.this, SweetAlertDialog.ERROR_TYPE)
-                                            .setTitleText("Oops!")
-                                            .setContentText(res)
-                                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                                @Override
-                                                public void onClick(SweetAlertDialog sDialog) {
-                                                    sDialog.dismissWithAnimation();
-                                                    finish();
-                                                    Intent mainIntent = new Intent(ChargeActivity.this,
-                                                            TopupActivity.class);
-                                                    ChargeActivity.this.startActivity(mainIntent);
-                                                }
-                                            })
-                                            .show();
-                                }
-                            });
+
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        new SweetAlertDialog(TopupCharge.this, SweetAlertDialog.ERROR_TYPE)
+                                                .setTitleText("Oops!")
+                                                .setContentText(res)
+                                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                                    @Override
+                                                    public void onClick(SweetAlertDialog sDialog) {
+                                                        sDialog.dismissWithAnimation();
+                                                        finish();
+                                                        Intent mainIntent = new Intent(TopupCharge.this,
+                                                                TopupActivity.class);
+                                                        TopupCharge.this.startActivity(mainIntent);
+                                                    }
+                                                })
+                                                .show();
+                                    }
+                                });
+
+
                         }
-                    }
+
 
                 }
             }
@@ -192,3 +209,4 @@ public class ChargeActivity extends AppCompatActivity {
 
 
 }
+

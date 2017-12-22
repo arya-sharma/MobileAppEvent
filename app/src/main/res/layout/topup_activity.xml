@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/lightGrey"></View>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="Enter Top Up Amount (Required)"
+                android:textColor="@color/black" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/input_amount_top"
+                android:layout_margin="5dp"
+                android:background="@color/colorWhite"
+                android:inputType="number"
+                android:text=""
+                android:gravity="center_horizontal"
+                android:hint="Enter Amount more than 10"/>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/input_confirm"
+                android:background="@color/green"
+                android:textColor="@color/colorWhite"
+                android:text="Confirm"/>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/input_cancel"
+                android:background="@color/orange"
+                android:textColor="@color/colorWhite"
+                android:text="Cancel"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+</LinearLayout>

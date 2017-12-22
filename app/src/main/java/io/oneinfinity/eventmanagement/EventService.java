@@ -16,6 +16,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import android.util.Log;
 
@@ -25,42 +26,56 @@ public class EventService {
     EventService() {
     }
 
-    public String execute() {
+    public JSONArray execute() {
         String url = BuildConfig.EVENT_URL;
         InputStream inputStream = null;
         String result = "";
-        JSONObject jwtToken = null;
+        JSONObject events = null;
+        JSONArray eventArray = new JSONArray();
         try {
 
             // 1. create HttpClient
             HttpClient httpclient = new DefaultHttpClient();
 
             // 2. make POST request to the given URL
-            HttpGet httpGet = new HttpGet(url);
+            HttpPost httpPost = new HttpPost(url);
+            String json = "";
 
-            httpGet.setHeader("Accept", "application/json");
-            httpGet.setHeader("Authorization", "Bearer " + JwtModel.jwtToken);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.accumulate("merchant", MerchantModel.merchantId);
 
-            HttpResponse httpResponse = httpclient.execute(httpGet);
+            json = jsonObject.toString();
+
+            StringEntity se = new StringEntity(json);
+
+            httpPost.setEntity(se);
+
+
+            httpPost.setHeader("Accept", "application/json");
+            httpPost.setHeader("Content-type", "application/json");
+            httpPost.setHeader("Authorization", "Bearer " + JwtModel.jwtToken);
+
+            HttpResponse httpResponse = httpclient.execute(httpPost);
 
             inputStream = httpResponse.getEntity().getContent();
 
             // 10. convert inputstream to string
             if(inputStream != null) {
                 result = convertInputStreamToString(inputStream);
-                jwtToken = new JSONObject(result);
-                result = jwtToken.getString("token");
+                eventArray = new JSONArray(result);
+               // jwtToken = new JSONObject(result);
+               // result = jwtToken.getString("token");
             }
             else {
-                result = "";
+                eventArray = new JSONArray();
             }
 
         } catch (Exception e) {
-            Log.d("InputStream", e.getLocalizedMessage());
+            Log.d("InputStream", e.getMessage());
         }
 
 
-        return result;
+        return eventArray;
 
     };
 
