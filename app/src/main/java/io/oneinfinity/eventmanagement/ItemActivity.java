@@ -276,7 +276,7 @@ public class ItemActivity extends AppCompatActivity  {
             textview.setText("1 " + item.getItemName() + " added");
             layout.addView(C);
 
-            layout.setMinimumHeight(count*160);
+            layout.setMinimumHeight(layout.getHeight()  + 60);
             Button checkout = (Button)C.findViewById(R.id.item_checkout);
             checkout.setOnClickListener(
                     new Button.OnClickListener() {
@@ -326,7 +326,7 @@ public class ItemActivity extends AppCompatActivity  {
                                     checkout.setVisibility(View.VISIBLE);
                                 }
 
-                                layout.setMinimumHeight(layout.getHeight() - 160);
+                                layout.setMinimumHeight(layout.getHeight() - 60);
                             }
                             else {
                                 TextView textview = (TextView)line.getView().findViewById(R.id.item_Text);

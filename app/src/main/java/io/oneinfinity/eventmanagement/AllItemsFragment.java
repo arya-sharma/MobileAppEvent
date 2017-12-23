@@ -196,6 +196,13 @@ public class AllItemsFragment extends Fragment  implements View.OnClickListener 
                 v.setTag(R.id.picture, v.findViewById(R.id.picture));
                 v.setTag(R.id.text, v.findViewById(R.id.title_item));
                 v.setTag(R.id.add, v.findViewById(R.id.item_add));
+                if(DeviceSize.width <=480){
+                    View listView = (View)v.findViewById(R.id.list_item_view);
+                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, 300);
+                    listView.setLayoutParams(params);
+
+                }
+
             }
 
             picture = (ImageView)v.getTag(R.id.picture);

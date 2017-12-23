@@ -11,8 +11,9 @@
         android:layout_margin="2dp">
         <View
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="280dp"
             android:background="@drawable/shape"
+            android:id="@+id/list_item_view"
             />
         <LinearLayout
             android:layout_width="match_parent"
