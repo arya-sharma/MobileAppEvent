@@ -226,9 +226,9 @@ public class AllItemsFragment extends Fragment  implements View.OnClickListener 
                 imageHeight = 100;
                 imageWidth = 90;
             }
-            if(size <= 720 && size > 480) {
-                imageHeight = 160;
-                imageWidth = 120;
+            if(size <= 768 && size > 480) {
+                imageHeight = 300;
+                imageWidth = 200;
             }
             if(size <= 1080 && size > 768) {
                 imageHeight = 400;

@@ -58,8 +58,8 @@ public class CheckoutActivity extends AppCompatActivity {
             imageHeight = 100;
             imageWidth = 60;
         }
-        if(size <= 720 && size > 480) {
-            imageHeight = 160;
+        if(size <= 768 && size > 480) {
+            imageHeight = 120;
             imageWidth = 80;
         }
         if(size <= 1080 && size > 768) {
