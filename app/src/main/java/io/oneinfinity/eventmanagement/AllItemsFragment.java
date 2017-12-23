@@ -241,7 +241,7 @@ public class AllItemsFragment extends Fragment  implements View.OnClickListener 
             ItemModel item = (ItemModel) getItem(i);
 
             //picture.setBackgroundColor();
-            name.setText(item.getItemName() + " - " + item.getItemPrice());
+            name.setText(item.getItemName() + " - " + " " + item.getCurrency() +" "+ item.getItemPrice());
             add.setText("Add +");
             String url = BuildConfig.IMAGE_URL + item.getItemImage();
             new AsyncTaskLoadImage(picture, imageWidth, imageHeight).execute(url);

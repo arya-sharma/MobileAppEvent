@@ -84,11 +84,11 @@ public class CheckoutActivity extends AppCompatActivity {
                 mapView.put(item.getItemId(), view);
                 textview = (TextView)view.findViewById(R.id.line);
                 //4 X Beer (Rs. 50)
-                textview.setText(item.getItemCount()+ " X " + item.getItemName() + " Rs. " + item.getItemPrice());
+                textview.setText(item.getItemCount()+ " X " + item.getItemName() + " " + item.getCurrency() +" " + item.getItemPrice());
 
                 //Total: Rs. 200
                 priceview = (TextView)view.findViewById(R.id.price);
-                priceview.setText("Total: " + "Rs." + item.getItemPrice()*item.getItemCount());
+                priceview.setText("Total: " + " " + item.getCurrency() +" " + item.getItemPrice()*item.getItemCount());
 
                 ImageButton add = (ImageButton)view.findViewById(R.id.add);
                 add.setTag(item.getItemId());
